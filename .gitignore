@@ -1,0 +1,17 @@
+# Environment
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# VS Code
+.vscode/
+
+# Outputs (generated, not committed)
+data/outputs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
