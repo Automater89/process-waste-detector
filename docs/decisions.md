@@ -31,3 +31,19 @@
 **Decision**: Define the severity rubric explicitly in the system prompt rather than post-processing the output.
 
 **Rationale**: Without a rubric, the model defaults toward over-labeling severity as High. Embedding the rubric in the prompt produces more calibrated and consistent ratings across different process descriptions.
+
+---
+
+## 2026-09-30: Waste score computed in code, not by the model
+
+**Decision**: `estimated_waste_score` is now calculated by `compute_waste_score()` from the detected wastes and their severities. The model's own number is kept as `model_estimated_waste_score` for comparison.
+
+**Rationale**: The scoring formula is deterministic (High=2, Medium=1, Low=0.5, normalized against 8 wastes at High). Language models are unreliable at arithmetic, so asking the model to do the math produced a number that could drift from its own findings. The model now does the judgment work (which wastes, how severe); code does the math.
+
+---
+
+## 2026-09-30: Tests run without Azure credentials
+
+**Decision**: `tests/conftest.py` sets placeholder Azure settings, and a GitHub Actions workflow runs the suite on every push and pull request.
+
+**Rationale**: The analyzer tests already mocked the Azure client, but configuration loading ran first and failed when no `.env` was present, so the suite could not pass on a fresh clone or in CI.

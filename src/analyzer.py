@@ -69,6 +69,26 @@ JSON schema:
 """
 
 
+SEVERITY_WEIGHTS = {"High": 2.0, "Medium": 1.0, "Low": 0.5}
+MAX_RAW_SCORE = 8 * SEVERITY_WEIGHTS["High"]  # all 8 DOWNTIME wastes at High
+
+
+def compute_waste_score(wastes: list) -> float:
+    """
+    Compute the 1-10 waste score in code instead of trusting the model's math.
+
+    Weights each detected waste by severity (High=2, Medium=1, Low=0.5),
+    normalizes against the maximum possible (8 wastes at High = 16), and
+    scales to 10. Returns 0.0 when no wastes are detected, otherwise a value
+    clamped to 1.0-10.0 and rounded to one decimal.
+    """
+    if not wastes:
+        return 0.0
+    raw = sum(SEVERITY_WEIGHTS.get(w.get("severity"), 0.0) for w in wastes)
+    score = raw / MAX_RAW_SCORE * 10
+    return round(min(max(score, 1.0), 10.0), 1)
+
+
 def analyze_process(description: str) -> dict:
     """
     Submit a process description for Lean waste analysis.
@@ -97,6 +117,16 @@ def analyze_process(description: str) -> dict:
 
     raw = response.choices[0].message.content
     result = json.loads(raw)
+
+    if "error" not in result:
+        model_score = result.get("estimated_waste_score")
+        result["model_estimated_waste_score"] = model_score
+        result["estimated_waste_score"] = compute_waste_score(result.get("wastes_detected", []))
+        if model_score != result["estimated_waste_score"]:
+            logger.info(
+                f"Model score {model_score} replaced with computed score {result['estimated_waste_score']}"
+            )
+
     logger.info(f"Analysis complete. Wastes detected: {len(result.get('wastes_detected', []))}")
     return result
 
