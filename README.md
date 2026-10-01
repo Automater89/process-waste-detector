@@ -211,7 +211,7 @@ python src/batch.py --csv data/samples/processes.csv
 - Add 10 sample processes across industries (HR, finance, manufacturing, IT)
 - Record Loom walkthrough demo
 - Add LinkedIn project summary
-- Link to Agent Showcase: https://automater89.github.io/Agent-Showcase/
+- Link to portfolio: https://automater89.github.io/Wes-Shelton/
 
 ---
 
@@ -242,7 +242,7 @@ The prompts, severity rubric, and recommendation patterns reflect real process i
 
 - [benefits-faq-agent](https://github.com/Automater89/benefits-faq-agent) — RAG-based HR benefits Q&A agent
 - [azure-doc-agent](https://github.com/Automater89/azure-doc-agent) — Document extraction and agent workflow pipeline
-- [Agent Showcase](https://automater89.github.io/Agent-Showcase/) — Live portfolio of AI and automation projects
+- [Portfolio](https://automater89.github.io/Wes-Shelton/) — Live portfolio of AI and automation projects
 
 ---
 
